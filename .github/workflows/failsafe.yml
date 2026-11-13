@@ -1,0 +1,30 @@
+# SDIdelay Plus — failsafe ("dead man's switch"). Runs on GitHub every day.
+# If the licence server hasn't updated alive.json for 45 days, the unlock file (repository secret
+# FAILSAFE_UNLOCK) is published as unlock.lic: every SDIdelay Plus with a permanent licence then becomes
+# Broadcast for good, without the licence server. From day 30 the daily run fails on purpose, so GitHub
+# e-mails you a warning first.
+name: SDIdelay failsafe
+on:
+  schedule:
+    - cron: "23 9 * * *"      # every day, 09:23 UTC
+  workflow_dispatch:          # Actions → SDIdelay failsafe → Run workflow (a check now; YES = publish now)
+    inputs:
+      publish_now:
+        description: "Type YES to publish the unlock NOW (cannot be undone in the apps)"
+        required: false
+        default: "no"
+permissions:
+  contents: write
+concurrency: failsafe
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the licence server's heartbeat
+        env:
+          UNLOCK: ${{ secrets.FAILSAFE_UNLOCK }}
+          DAYS: "45"
+          WARN_DAYS: "30"
+          PUBLISH_NOW: ${{ github.event.inputs.publish_now }}
+        run: bash failsafe.sh
