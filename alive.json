@@ -1,6 +1,6 @@
 {
-  "alive": "2026-11-22T21:19:38Z",
+  "alive": "2026-11-23T07:20:32Z",
   "note": "Written daily by the STVN - SDIdelay Plus licence server. If this date is 45 days old, the failsafe unlock is published.",
-  "server": "3.22.0",
-  "unix": 1795382378
+  "server": "3.23.0",
+  "unix": 1795418432
 }
